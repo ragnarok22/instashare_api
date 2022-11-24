@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "instashare_api"
+version = "0.1.0"
+description = "InstaShare API"
+authors = ["Reinier Hernández <sasuke.reinier@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.scripts]
+server = "scripts.dev:runserver"
+test = "scripts.dev:test"
+celery = "scripts.dev:celery"
+migrate_all = "scripts.dev:migrate_all"
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+Django = "^3.2"
+Pillow = "^9.2"
+psycopg2-binary = "^2.9.5"
+djangorestframework = "^3.14.0"
+gunicorn = "^20.1.0"
+djangorestframework-simplejwt = "^5.2.2"
+
+[tool.poetry.group.dev.dependencies]
+coverage = "^6.5"
+black = "^22.10"
+pre-commit = "^2.20.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
