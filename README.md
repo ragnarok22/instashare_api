@@ -2,10 +2,13 @@
 InstaShare API
 
 ![Django CI](https://github.com/ragnarok22/instashare_api/actions/workflows/django-test.yml/badge.svg)
+![Codecov](https://img.shields.io/codecov/c/github/ragnarok22/instashare_api)
+[![GitHub license](https://img.shields.io/github/license/ragnarok22/instashare_api)](https://github.com/ragnarok22/instashare_api/blob/main/LICENSE)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/ragnarok22/instashare_api)
+![GitHub repo size](https://img.shields.io/github/repo-size/ragnarok22/instashare_api)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/ragnarok22/instashare_api)
 
-License
--------
-
+## License
 Distributed under the terms of the [MIT](LICENSE) license.
 
 ## Running in development mode
