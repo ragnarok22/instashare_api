@@ -20,3 +20,6 @@ class File(TimeStampedModel):
 
     def size(self) -> str:
         return human_file_size(os.stat(self.file.path).st_size)
+
+    def __str__(self):
+        return self.title.title()
