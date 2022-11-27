@@ -67,3 +67,6 @@ LOGGING = {
         "config": {"handlers": ["console"], "level": "WARNING"},
     },
 }
+
+
+CORS_ALLOWED_ORIGINS = ["https://instashare.ragnarok22.dev"]
