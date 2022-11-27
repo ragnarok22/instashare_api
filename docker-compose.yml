@@ -1,24 +1,58 @@
 version: "3"
 
 services:
+  redis:
+    image: redis:7.0
+    container_name: instashare_redis
+    networks:
+      instashare_subnet:
+        - aliases:
+            - redis
   db:
     image: postgres:13.4
+    restart: always
+    container_name: instashare_db
+    networks:
+      instashare_subnet:
+        - aliases:
+            - db
     volumes:
       - ./data/db:/var/lib/postgresql/data
     env_file:
       - .env
-  web:
+  api:
     container_name: instashare_api
     build: .
-    command: gunicorn config.wsgi:application -b :8000 --log-file /code/logs/gunicorn.log
     volumes:
       - ./data/static:/code/static/
       - ./data/media:/code/media/
       - ./data/logs:/code/logs/
     env_file:
       - .env
-    ports:
-      - "8000:8000"
+    networks:
+      instashare_subnet:
+        - aliases:
+            - api
     depends_on:
       - db
     restart: always
+  nginx:
+    image: nginx:1.23.2
+    container_name: instashare_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./data/static:/code/instashare_api/static
+      - ./data/files:/code/instachare_api/media
+      - ./config/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api
+    networks:
+      instashare_subnet:
+        - aliases:
+            - nginx
+    restart: "on-failure"
+
+
+networks:
+  instashare_subnet:
