@@ -40,7 +40,7 @@ services:
     image: nginx:1.23.2
     container_name: instashare_nginx
     ports:
-      - "8000:80"
+      - "8003:80"
     volumes:
       - ./data/static:/code/instashare_api/static
       - ./data/files:/code/instachare_api/media
