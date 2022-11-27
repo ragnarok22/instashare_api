@@ -6,16 +6,16 @@ services:
     container_name: instashare_redis
     networks:
       instashare_subnet:
-        - aliases:
-            - redis
+        aliases:
+          - redis
   db:
     image: postgres:13.4
     restart: always
     container_name: instashare_db
     networks:
       instashare_subnet:
-        - aliases:
-            - db
+        aliases:
+          - db
     volumes:
       - ./data/db:/var/lib/postgresql/data
     env_file:
@@ -31,8 +31,8 @@ services:
       - .env
     networks:
       instashare_subnet:
-        - aliases:
-            - api
+        aliases:
+          - api
     depends_on:
       - db
     restart: always
@@ -49,8 +49,8 @@ services:
       - api
     networks:
       instashare_subnet:
-        - aliases:
-            - nginx
+        aliases:
+          - nginx
     restart: "on-failure"
 
 
