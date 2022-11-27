@@ -17,3 +17,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "instashare_api", "media")
 
 # email settings
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
