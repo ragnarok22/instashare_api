@@ -1,5 +1,7 @@
 from .base import *
 
+SECRET_KEY = get_env_variable("SECRET_KEY")
+
 ALLOWED_HOSTS = get_env_variable("ALLOWED_HOSTS").split(" ")
 DEBUG = False
 
@@ -9,14 +11,14 @@ DATABASES = {
         "NAME": get_env_variable("POSTGRES_DB"),
         "USER": get_env_variable("DB_USER"),
         "PASSWORD": get_env_variable("POSTGRES_PASSWORD"),
-        "HOST": "db",
+        "HOST": get_env_variable("DB_HOST"),
         "PORT": 5432,
         "CONN_MAX_AGE": 600,
         "ATOMIC_REQUESTS": True,
     }
 }
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "instashare_api/media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, "instashare_api", "media")
 
 REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = ("rest_framework.renderers.JSONRenderer",)
 
