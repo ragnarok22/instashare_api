@@ -17,6 +17,7 @@ from apps.core import views as core_views
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
+router.register(r"users", accounts_views.UserViewSet, basename="user")
 router.register(r"files", files_views.FileViewSet, basename="file")
 
 urlpatterns = [
