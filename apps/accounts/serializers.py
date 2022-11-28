@@ -8,7 +8,16 @@ from apps.accounts.models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "first_name", "last_name"]
+        fields = [
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "about",
+            "github",
+            "twitter",
+        ]
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
