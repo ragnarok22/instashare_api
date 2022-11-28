@@ -8,7 +8,7 @@ from apps.files.utils import human_file_size
 
 
 def upload_to(instance, filename):
-    return "images/{creator}/{filename}".format(
+    return "{creator}/files/{filename}".format(
         creator=instance.creator.username, filename=filename
     )
 
