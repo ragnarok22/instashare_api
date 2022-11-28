@@ -1,0 +1,32 @@
+### Authorization by token, part 1. Retrieve and save token.
+POST http://localhost:8000/api/login/
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin1"
+}
+
+> {% client.global.set("auth_token", response.body.access); %}
+
+### GET user list
+GET http://localhost:8000/api/users/
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### GET user detail
+GET http://localhost:8000/api/users/1/
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+### Create a User
+POST http://localhost:8000/api/users/
+Accept: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "username": "username1",
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john@example.com"
+}
