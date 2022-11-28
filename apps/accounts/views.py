@@ -1,10 +1,12 @@
 from rest_framework import permissions
 from django.contrib.auth import logout
-from rest_framework.views import APIView
 from rest_framework import status, viewsets
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from apps.accounts.models import User
+from apps.accounts.permissions import IsCreatorOrAdmin
 from apps.accounts.serializers import (
     RegistrationSerializer,
     TokenSerializer,
@@ -14,7 +16,21 @@ from apps.accounts.serializers import (
 
 class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = User.objects.all()
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action == "list" or self.action == "create":
+            permission_classes = [
+                permissions.IsAdminUser,
+            ]
+        else:
+            permission_classes = [
+                IsCreatorOrAdmin,
+            ]
+        return [permission() for permission in permission_classes]
 
 
 class RegistrationView(APIView):
