@@ -8,7 +8,6 @@ license = "MIT"
 [tool.poetry.scripts]
 server = "scripts.dev:runserver"
 test = "scripts.dev:test"
-celery = "scripts.dev:celery"
 migrate_all = "scripts.dev:migrate_all"
 
 [tool.poetry.dependencies]

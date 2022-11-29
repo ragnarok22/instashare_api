@@ -37,10 +37,11 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    "celery",
+    "django_celery_beat",
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
-    "django_celery_beat",
 ]
 
 LOCAL_APPS = [
@@ -171,7 +172,5 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
     # "interval_step": 0.2,
     # "interval_max": 0.5,
     # ten years
-    # "visibility_timeout": timedelta(days=10 * 12 * 30).total_seconds()
+    "visibility_timeout": timedelta(days=10 * 12 * 30).total_seconds()
 }
-CELERY_BROKER_URL = get_env_variable("REDIS_URL", "redis://localhost:6379")
-CELERY_RESULT_BACKEND = get_env_variable("REDIS_URL", "redis://localhost:6379")

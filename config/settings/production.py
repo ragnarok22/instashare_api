@@ -70,3 +70,6 @@ LOGGING = {
 
 
 CORS_ALLOWED_ORIGINS = ["https://instashare.ragnarok22.dev"]
+
+CELERY_BROKER_URL = get_env_variable("REDIS_URL", "redis://redis:6379")
+CELERY_RESULT_BACKEND = get_env_variable("REDIS_URL", "redis://redis:6379")

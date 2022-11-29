@@ -17,3 +17,36 @@ ALLOWED_HOSTS = ["*"]
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {"format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"},
+        "simple": {"format": "%(levelname)s %(message)s"},
+    },
+    "filters": {"require_debug_true": {"()": "django.utils.log.RequireDebugTrue"}},
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["console"], "level": "INFO"},
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "django.db.backends": {"handlers": ["console"], "level": "WARNING"},
+        "apps.files": {"handlers": ["console"], "level": "INFO"},
+        "apps.core": {"handlers": ["console"], "level": "INFO"},
+        "config": {"handlers": ["console"], "level": "DEBUG"},
+    },
+}
+
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
