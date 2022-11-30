@@ -3,6 +3,7 @@ from django.contrib.auth import logout
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.decorators import action
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.accounts.models import User
@@ -31,6 +32,11 @@ class UserViewSet(viewsets.ModelViewSet):
                 IsCreatorOrAdmin,
             ]
         return [permission() for permission in permission_classes]
+
+    @action(detail=False)
+    def me(self, request, *args, **kwargs):
+        user = request.user
+        return Response(self.serializer_class(user).data)
 
 
 class RegistrationView(APIView):
