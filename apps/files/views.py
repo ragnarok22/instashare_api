@@ -1,5 +1,7 @@
 import os
 
+from config.celery import app
+
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -90,7 +92,7 @@ class FileViewSet(viewsets.ModelViewSet):
                 os.unlink(last_compress.file.path)
             else:
                 # stop the process
-                pass
+                app.control.revoke(last_compress.task_id, terminate=True)
             last_compress.delete()
 
         result = tasks.compress_all_user_files.delay(request.user.id)
