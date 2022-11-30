@@ -10,6 +10,8 @@ class UserAdmin(UserAdmin):
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active")
     search_fields = ("username", "first_name", "last_name", "email")
+    add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields": ("picture",)}),)
+    fieldsets = UserAdmin.fieldsets + ((None, {"fields": ("picture",)}),)
 
 
 # Remove Group Model from admin. We're not using it.

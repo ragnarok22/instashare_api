@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
             "github",
             "twitter",
             "get_full_name",
+            "picture",
         ]
 
 
