@@ -2,11 +2,10 @@ import json
 import tempfile
 
 from PIL import Image
-
-from rest_framework.test import APITestCase
-from django.urls import reverse
 from django.core.files import File as DjangoFile
+from django.urls import reverse
 from rest_framework import status
+from rest_framework.test import APITestCase
 
 from apps.accounts.models import User
 from apps.accounts.serializers import TokenSerializer
