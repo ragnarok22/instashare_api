@@ -19,6 +19,8 @@ def change_path(app, schema_editor):
             os.rename("/".join(old_path), new_path)
         except FileNotFoundError:
             pass
+        except OSError:
+            pass
 
         file.file.name = "{creator}/files/{file}".format(
             creator=file.creator.username, file=old_path[-1]
