@@ -14,6 +14,8 @@ from apps.files.models import File, CompressedFile
 
 
 class FileTests(APITestCase):
+    """Tests for File app"""
+
     @staticmethod
     def create_user(username="user", email="user@example.com", password="password1"):
         user = User.objects.create_user(username, email, password)
@@ -107,3 +109,29 @@ class FileTests(APITestCase):
         self.assertEqual(
             json.loads(response.content).get("results")[0].get("title"), file.title
         )
+
+    def test_compress_file(self):
+        """Send to compress all files for authenticated user"""
+        url = reverse("file-compress")
+
+        # create a file
+        image = Image.new("RGB", (100, 100))
+        tmp_file = tempfile.NamedTemporaryFile(suffix=".jpg")
+        image.save(tmp_file)
+        tmp_file.seek(0)
+        image.save(tmp_file)
+        tmp_file.seek(0)
+        file = File.objects.create(
+            title="file 2", file=DjangoFile(tmp_file), creator=self.user
+        )
+
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.get_token())
+        response = self.client.get(url)
+        compress = CompressedFile.objects.filter(creator=self.user)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            json.loads(response.content).get("message"), "start processing"
+        )
+        self.assertEqual(compress.count(), 1)
+        self.assertEqual(compress.first().creator, self.user)
