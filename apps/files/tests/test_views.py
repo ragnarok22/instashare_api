@@ -7,7 +7,6 @@ from django.test.utils import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
 from apps.accounts.models import User
 from apps.accounts.serializers import TokenSerializer
 from apps.files.models import File, CompressedFile
@@ -44,11 +43,6 @@ class FileTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(File.objects.count(), 0)
 
-    @override_settings(
-        CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
-        CELERY_ALWAYS_EAGER=True,
-        CELERY_BROKER_BACKEND="memory",
-    )
     def test_create_a_file_with_register_user(self):
         """Try to create a file with authenticated user"""
         url = reverse("file-list")
@@ -119,9 +113,9 @@ class FileTests(APITestCase):
     @override_settings(
         CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
         CELERY_ALWAYS_EAGER=True,
-        CELERY_RESULT_BACKEND="cache+memory://",
         CELERY_BROKER_URL="memory://",
-        BROKER_BACKEND="memory",
+        CELERY_RESULT_BACKEND="db+sqlite:///results.sqlite",
+        CELERY_BROKER_TRANSPORT="memory",
     )
     def test_compress_file(self):
         """Send to compress all files for authenticated user"""
@@ -134,7 +128,7 @@ class FileTests(APITestCase):
         tmp_file.seek(0)
         image.save(tmp_file)
         tmp_file.seek(0)
-        file = File.objects.create(
+        File.objects.create(
             title="file 2", file=DjangoFile(tmp_file), creator=self.user
         )
 
