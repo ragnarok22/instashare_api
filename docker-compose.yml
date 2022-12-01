@@ -52,7 +52,19 @@ services:
         aliases:
           - nginx
     restart: "on-failure"
-
+  worker:
+    container_name: instashare_worker
+    build: .
+    command: celery -A config worker -l INFO
+    env_file:
+      - .env
+    networks:
+      instashare_subnet:
+        aliases:
+          - worker
+    depends_on:
+      - db
+      - redis
 
 networks:
   instashare_subnet:
