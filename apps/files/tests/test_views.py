@@ -3,6 +3,7 @@ import tempfile
 
 from PIL import Image
 from django.core.files import File as DjangoFile
+from django.test.utils import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -26,6 +27,7 @@ class FileTests(APITestCase):
         return str(refresh.access_token)
 
     def setUp(self) -> None:
+        super().setUp()
         self.user = self.create_user()
 
     def test_create_a_file_with_anonymous_user(self):
@@ -42,6 +44,11 @@ class FileTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(File.objects.count(), 0)
 
+    @override_settings(
+        CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+        CELERY_ALWAYS_EAGER=True,
+        CELERY_BROKER_BACKEND="memory",
+    )
     def test_create_a_file_with_register_user(self):
         """Try to create a file with authenticated user"""
         url = reverse("file-list")
