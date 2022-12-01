@@ -56,6 +56,8 @@ services:
     container_name: instashare_worker
     build: .
     command: celery -A config worker -l INFO
+    volumes:
+      - media_files:/code/instashare_api/media
     env_file:
       - .env
     networks:
