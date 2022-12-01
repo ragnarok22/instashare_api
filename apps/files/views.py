@@ -70,6 +70,13 @@ class FileViewSet(viewsets.ModelViewSet):
                     {"message": result.status, "url": last_compress.file.url},
                     status=status.HTTP_200_OK,
                 )
+            elif result.status == "FAILURE":
+                last_compress.is_finish = True
+                last_compress.save()
+                return Response(
+                    {"message": result.status},
+                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
+                )
 
             return Response({"message": result.status}, status=status.HTTP_200_OK)
         else:
