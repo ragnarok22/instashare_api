@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.schemas import get_schema_view
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from apps.accounts import views as accounts_views
 from apps.files import views as files_views
@@ -29,17 +29,8 @@ urlpatterns = [
     path("api/register/", accounts_views.RegistrationView.as_view(), name="register"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path(
-        "openapi",
-        get_schema_view(
-            title="Drones API",
-            description="Drone Infrastructure API",
-            version="1.0.0",
-            url="https://drones-api.ragnarok22.dev/",
-        ),
-        name="openapi-schema",
-    ),
-    path("docs/", core_views.DocsView.as_view(), name="docs"),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger"),
 ]
 
 if settings.DEBUG:

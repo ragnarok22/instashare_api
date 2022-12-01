@@ -73,6 +73,7 @@ You must create .env file with the next variables:
 - `POSTGRES_PASSWORD`: postgres database password.
 - `POSTGRES_DB`: postgres database name.
 - `ALLOWED_HOSTS`: A list of strings representing the host/domain names that this Django site can serve.
+- `REDIS_URL`: The redis url. (Ex: redis://localhost:6379)
 
 [Here](.env-example) you have an example
 
@@ -90,7 +91,7 @@ Here set an example for a nginx configuration and with the certbot to manage the
 This project is set to only run in secure protocol (https)
 
     server {
-        server_name drones-api.ragnarok22.dev;
+        server_name instashare-api.ragnarok22.dev;
 
         location / {
             proxy_pass http://localhost:8000;
@@ -101,21 +102,21 @@ This project is set to only run in secure protocol (https)
 
         listen [::]:443 ssl ipv6only=on; # managed by Certbot
         listen 443 ssl; # managed by Certbot
-        ssl_certificate /etc/letsencrypt/live/drones-api.ragnarok22.dev/fullchain.pem; # managed by Certbot
-        ssl_certificate_key /etc/letsencrypt/live/drones-api.ragnarok22.dev/privkey.pem; # managed by Certbot
+        ssl_certificate /etc/letsencrypt/live/instashare-api.ragnarok22.dev/fullchain.pem; # managed by Certbot
+        ssl_certificate_key /etc/letsencrypt/live/instashare-api.ragnarok22.dev/privkey.pem; # managed by Certbot
         include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
         ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
     }
 
     server {
-        if ($host = drones-api.ragnarok22.dev) {
+        if ($host = instashare-api.ragnarok22.dev) {
             return 301 https://$host$request_uri;
         } # managed by Certbot
 
         listen 80;
         listen [::]:80;
 
-        server_name drones-api.ragnarok22.dev;
+        server_name instashare-api.ragnarok22.dev;
         return 404; # managed by Certbot
     }
 
@@ -128,4 +129,9 @@ coverage report
 ```
 
 ## API Documentation
-TODO
+Run the project:
+
+```shell
+python manage.py runserver
+```
+And then go to http://localhost:8000/docs/

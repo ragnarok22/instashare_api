@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
@@ -153,6 +154,19 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "InstaShare API",
+    "DESCRIPTION": "Share and Download your files",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "LICENSE": "MIT",
+    "SERVERS": [
+        {"url": "https://instashare-api.ragnarok22.dev", "description": "Production"},
+    ],
+    "SCHEMA_PATH_PREFIX": r"/api/",
 }
 
 SIMPLE_JWT = {
