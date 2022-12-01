@@ -116,6 +116,13 @@ class FileTests(APITestCase):
             json.loads(response.content).get("results")[0].get("title"), file.title
         )
 
+    @override_settings(
+        CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+        CELERY_ALWAYS_EAGER=True,
+        CELERY_RESULT_BACKEND="cache+memory://",
+        CELERY_BROKER_URL="memory://",
+        BROKER_BACKEND="memory",
+    )
     def test_compress_file(self):
         """Send to compress all files for authenticated user"""
         url = reverse("file-compress")
