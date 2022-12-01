@@ -29,7 +29,7 @@ jobs:
     - run: poetry install
     - name: Run Tests
       run: |
-        poetry run coverage run manage.py test
+        poetry run coverage run manage.py test apps
         poetry run coverage report
         poetry run coverage xml
     - name: Upload coverage to Codecov
