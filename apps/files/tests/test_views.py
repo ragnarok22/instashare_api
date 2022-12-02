@@ -1,4 +1,3 @@
-import json
 import tempfile
 
 from PIL import Image
@@ -7,6 +6,7 @@ from django.test.utils import override_settings
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+
 from apps.accounts.models import User
 from apps.accounts.serializers import TokenSerializer
 from apps.files.models import File, CompressedFile
@@ -70,10 +70,11 @@ class FileTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content).get("count"), 0)
-        self.assertIsNone(json.loads(response.content).get("next"))
-        self.assertIsNone(json.loads(response.content).get("previous"))
-        self.assertEqual(json.loads(response.content).get("results"), [])
+        self.assertEqual(response.data["count"], 0)
+        self.assertIsNone(response.data["next"])
+        self.assertIsNone(response.data["previous"])
+        self.assertEqual(len(response.data["results"]), 0)
+        self.assertEqual(response.data["results"], [])
 
     def test_list_files_from_authenticated_user(self):
         """List files from user with one File"""
@@ -94,21 +95,13 @@ class FileTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content).get("count"), 1)
-        self.assertIsNone(json.loads(response.content).get("next"))
-        self.assertIsNone(json.loads(response.content).get("previous"))
-        self.assertEqual(len(json.loads(response.content).get("results")), 1)
-        self.assertEqual(
-            json.loads(response.content).get("results")[0].get("creator"),
-            self.user.username,
-        )
-        self.assertEqual(
-            json.loads(response.content).get("results")[0].get("creator_id"),
-            self.user.id,
-        )
-        self.assertEqual(
-            json.loads(response.content).get("results")[0].get("title"), file.title
-        )
+        self.assertEqual(response.data["count"], 1)
+        self.assertIsNone(response.data["next"])
+        self.assertIsNone(response.data["previous"])
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertEqual(response.data["results"][0].get("creator"), self.user.username)
+        self.assertEqual(response.data["results"][0].get("creator_id"), self.user.id)
+        self.assertEqual(response.data["results"][0].get("title"), file.title)
 
     @override_settings(
         CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
@@ -137,8 +130,6 @@ class FileTests(APITestCase):
         compress = CompressedFile.objects.filter(creator=self.user)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            json.loads(response.content).get("message"), "start processing"
-        )
+        self.assertEqual(response.data.get("message"), "start processing")
         self.assertEqual(compress.count(), 1)
         self.assertEqual(compress.first().creator, self.user)

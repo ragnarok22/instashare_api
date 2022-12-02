@@ -1,11 +1,9 @@
-import json
-
 from django.urls import reverse
+from rest_framework import status
 from rest_framework.test import APITestCase
 
 from apps.accounts.models import User
 from apps.accounts.serializers import TokenSerializer
-from rest_framework import status
 
 
 class AccountTests(APITestCase):
@@ -57,10 +55,10 @@ class AccountTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content).get("count"), 2)
-        self.assertIsNone(json.loads(response.content).get("next"))
-        self.assertIsNone(json.loads(response.content).get("previous"))
-        self.assertEqual(len(json.loads(response.content).get("results")), 2)
+        self.assertEqual(response.data["count"], 2)
+        self.assertIsNone(response.data["next"])
+        self.assertIsNone(response.data["previous"])
+        self.assertEqual(len(response.data["results"]), 2)
 
     def test_get_current_user_info_without_logged_user(self):
         """Get the info from the logged user with anonymous user"""
@@ -70,7 +68,7 @@ class AccountTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(
-            json.loads(response.content).get("detail"),
+            response.data.get("detail"),
             "Authentication credentials were not provided.",
         )
 
@@ -83,21 +81,15 @@ class AccountTests(APITestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content).get("id"), self.user.id)
-        self.assertEqual(
-            json.loads(response.content).get("username"), self.user.username
-        )
-        self.assertEqual(
-            json.loads(response.content).get("first_name"), self.user.first_name
-        )
-        self.assertEqual(
-            json.loads(response.content).get("last_name"), self.user.last_name
-        )
-        self.assertEqual(json.loads(response.content).get("email"), self.user.email)
-        self.assertEqual(json.loads(response.content).get("about"), self.user.about)
-        self.assertEqual(json.loads(response.content).get("twitter"), self.user.twitter)
-        self.assertEqual(json.loads(response.content).get("github"), self.user.github)
-        self.assertEqual(json.loads(response.content).get("picture"), self.user.picture)
+        self.assertEqual(response.data["id"], self.user.id)
+        self.assertEqual(response.data["username"], self.user.username)
+        self.assertEqual(response.data["first_name"], self.user.first_name)
+        self.assertEqual(response.data["last_name"], self.user.last_name)
+        self.assertEqual(response.data["email"], self.user.email)
+        self.assertEqual(response.data["about"], self.user.about)
+        self.assertEqual(response.data["twitter"], self.user.about)
+        self.assertEqual(response.data["github"], self.user.github)
+        self.assertEqual(response.data["picture"], self.user.picture)
 
     def test_register_user(self):
         """Register a new user"""
@@ -115,16 +107,10 @@ class AccountTests(APITestCase):
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(
-            json.loads(response.content).get("username"), data.get("username")
-        )
-        self.assertEqual(
-            json.loads(response.content).get("first_name"), data.get("first_name")
-        )
-        self.assertEqual(
-            json.loads(response.content).get("last_name"), data.get("last_name")
-        )
-        self.assertEqual(json.loads(response.content).get("email"), data.get("email"))
+        self.assertEqual(response.data["username"], data.get("username"))
+        self.assertEqual(response.data["first_name"], data.get("first_name"))
+        self.assertEqual(response.data["last_name"], data.get("last_name"))
+        self.assertEqual(response.data["email"], data.get("email"))
 
     def test_register_user_with_short_password(self):
         """Register a new user with short password"""
@@ -143,7 +129,7 @@ class AccountTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            json.loads(response.content).get("password"),
+            response.data.get("password"),
             [
                 "This password is too short. It must contain at least 8 characters.",
                 "This password is too common.",
@@ -165,6 +151,4 @@ class AccountTests(APITestCase):
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(
-            json.loads(response.content).get("email"), ["This field is required."]
-        )
+        self.assertEqual(response.data.get("email"), ["This field is required."])
